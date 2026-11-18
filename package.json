@@ -5,7 +5,7 @@
   "description": "A small paste-sharing app with expiring links",
   "scripts": {
     "build": "node build.js",
-    "start": "npm run build && node server.js"
+    "start": "npm run build && node scripts/start.js"
   },
   "dependencies": {
     "@neon/neon-js": "^0.10.2",
