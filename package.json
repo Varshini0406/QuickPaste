@@ -1,0 +1,15 @@
+{
+  "name": "quickpaste",
+  "version": "1.0.0",
+  "private": true,
+  "description": "A small paste-sharing app with expiring links",
+  "scripts": {
+    "start": "node server.js"
+  },
+  "dependencies": {
+    "@neondatabase/serverless": "^1.0.2"
+  },
+  "engines": {
+    "node": ">=20"
+  }
+}

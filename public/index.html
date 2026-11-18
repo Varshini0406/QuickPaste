@@ -1,0 +1,125 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="theme-color" content="#f4f7f3">
+    <meta name="description" content="A simple, private-feeling place to share text with an expiring link.">
+    <title>QuickPaste — share text simply</title>
+    <link rel="stylesheet" href="/styles.css?v=6">
+    <script src="/app.js" defer></script>
+  </head>
+  <body>
+    <header class="topbar">
+      <a class="brand" href="/" aria-label="QuickPaste home">
+        <span class="brand-name">Quick<span>Paste</span></span>
+      </a>
+      <span class="top-note"><span class="status-dot"></span> Your words, on their way</span>
+    </header>
+
+    <main>
+      <section id="create-view" class="layout">
+        <div class="intro">
+          <div class="eyebrow"><span class="eyebrow-line"></span> A little space for your text</div>
+          <h1>Write it.<br><span>Share it.</span></h1>
+          <p class="intro-copy">A clean, simple home for snippets, notes, and thoughts worth passing along.</p>
+          <div class="feature-list">
+            <div class="feature"><span class="feature-icon">↗</span><span>One link. Anyone can read.</span></div>
+            <div class="feature"><span class="feature-icon">◷</span><span>Set it to disappear when you choose.</span></div>
+            <div class="feature"><span class="feature-icon">⌘</span><span>No account. No fuss.</span></div>
+          </div>
+        </div>
+
+        <section class="composer card" aria-labelledby="composer-title">
+          <div class="card-heading">
+            <div>
+              <span class="section-kicker">NEW PASTE</span>
+              <h2 id="composer-title">What’s on your mind?</h2>
+            </div>
+            <span class="paper-icon" aria-hidden="true">✳</span>
+          </div>
+          <form id="paste-form">
+            <label class="field-label" for="paste-title">TITLE <span class="optional">OPTIONAL</span></label>
+            <input id="paste-title" name="title" type="text" maxlength="120" placeholder="Give it a name">
+
+            <div class="content-label-row">
+              <label class="field-label" for="paste-content">YOUR TEXT</label>
+              <span id="char-count" class="char-count">0 / 1 MB</span>
+            </div>
+            <textarea id="paste-content" name="content" required maxlength="1048576" placeholder="Paste or type something here…" spellcheck="false"></textarea>
+
+            <div class="options-grid">
+              <div>
+                <label class="field-label" for="expiration">EXPIRES AFTER</label>
+                <select id="expiration" name="expiration">
+                  <option value="never">Never</option>
+                  <option value="10m">10 minutes</option>
+                  <option value="1h">1 hour</option>
+                  <option value="1d">1 day</option>
+                  <option value="7d">7 days</option>
+                </select>
+              </div>
+              <div>
+                <label class="field-label" for="max-views">MAX VIEWS</label>
+                <select id="max-views" name="maxViews">
+                  <option value="never">Unlimited</option>
+                  <option value="1">1 view</option>
+                  <option value="5">5 views</option>
+                  <option value="10">10 views</option>
+                  <option value="25">25 views</option>
+                  <option value="100">100 views</option>
+                </select>
+              </div>
+            </div>
+            <p id="form-error" class="form-error" role="alert" hidden></p>
+            <button id="submit-button" class="primary-button" type="submit">
+              <span>Create your link</span><span class="button-arrow" aria-hidden="true">↗</span>
+            </button>
+          </form>
+
+          <div id="share-result" class="share-result" hidden>
+            <div class="result-check" aria-hidden="true">✓</div>
+            <div class="result-copy">
+              <strong>Your link is ready</strong>
+              <span>It’s yours to share with anyone.</span>
+            </div>
+            <div class="link-row">
+              <input id="share-url" aria-label="Shareable link" readonly>
+              <button id="copy-link" class="copy-button" type="button">Copy link</button>
+            </div>
+            <a id="open-paste" class="open-link" href="#">Open your paste <span aria-hidden="true">↗</span></a>
+          </div>
+        </section>
+      </section>
+
+      <section id="paste-view" class="paste-layout" hidden>
+        <a class="back-link" href="/">← <span>Make a new paste</span></a>
+        <article class="card paste-card">
+          <div class="paste-header">
+            <div>
+              <span class="section-kicker">SHARED PASTE</span>
+              <h1 id="paste-heading" class="paste-title">Your paste</h1>
+              <p id="paste-meta" class="paste-meta"></p>
+            </div>
+            <button id="copy-content" class="copy-button" type="button">Copy text</button>
+          </div>
+          <pre id="paste-body" class="paste-body"></pre>
+        </article>
+        <p class="paste-footer">Shared with <a href="/">quickpaste</a> <span>·</span> simple words, simple links.</p>
+      </section>
+
+      <section id="unavailable-view" class="unavailable card" hidden>
+        <span class="unavailable-icon" aria-hidden="true">◌</span>
+        <span class="section-kicker">LINK UNAVAILABLE</span>
+        <h1>This paste has moved on.</h1>
+        <p>It may have expired or reached its view limit.</p>
+        <a class="primary-button button-link" href="/">Create a new paste <span class="button-arrow" aria-hidden="true">↗</span></a>
+      </section>
+    </main>
+
+    <footer class="site-footer">
+      <span>Made for the things you want to pass along.</span>
+      <span>Keep it kind. Keep it simple.</span>
+    </footer>
+  </body>
+</html>
