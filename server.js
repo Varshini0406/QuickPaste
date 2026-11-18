@@ -7,7 +7,7 @@ const PORT = Number(process.env.PORT) || 3000;
 const MAX_CONTENT_LENGTH = 1024 * 1024;
 const DATA_DIR = process.env.DATA_DIR || path.join(__dirname, "data");
 const DATA_FILE = path.join(DATA_DIR, "pastes.json");
-const PUBLIC_DIR = path.join(__dirname, "public");
+const PUBLIC_DIR = path.join(__dirname, "dist");
 const POSTGRES_URL = process.env.POSTGRES_URL || process.env.DATABASE_URL;
 const EXPIRATIONS = new Set(["never", "10m", "1h", "1d", "7d"]);
 const VIEW_LIMITS = new Set(["never", "1", "5", "10", "25", "100"]);
@@ -219,27 +219,51 @@ function isCrossOriginApiRequest(request) {
 }
 
 function serveStatic(response, pathname) {
-  const files = {
-    "/": ["index.html", "text/html; charset=utf-8"],
-    "/styles.css": ["styles.css", "text/css; charset=utf-8"],
-    "/app.js": ["app.js", "text/javascript; charset=utf-8"]
-  };
-  const file = files[pathname] || (pathname.length > 1 && !pathname.slice(1).includes("/")
-    ? files["/"]
-    : null);
-  if (!file) {
+  let decodedPath;
+  try {
+    decodedPath = decodeURIComponent(pathname);
+  } catch {
     response.writeHead(404);
     response.end("Not found");
     return;
   }
-  const [name, contentType] = file;
-  response.writeHead(200, {
-    "Content-Type": contentType,
-    "Cache-Control": "no-cache",
-    ...SECURITY_HEADERS,
-    "Content-Security-Policy": "default-src 'self'; img-src 'self' data:; style-src 'self'; script-src 'self'; connect-src 'self'; base-uri 'none'; form-action 'self'; frame-ancestors 'none'; object-src 'none'"
+
+  const isPasteRoute = /^\/[A-Za-z0-9_-]{12}$/.test(decodedPath);
+  const relativePath = decodedPath === "/" || isPasteRoute
+    ? "index.html"
+    : decodedPath.replace(/^[/\\]+/, "");
+  const publicRoot = path.resolve(PUBLIC_DIR);
+  const filePath = path.resolve(publicRoot, relativePath);
+  if (filePath !== publicRoot && !filePath.startsWith(`${publicRoot}${path.sep}`)) {
+    response.writeHead(404);
+    response.end("Not found");
+    return;
+  }
+
+  const contentTypes = {
+    ".css": "text/css; charset=utf-8",
+    ".html": "text/html; charset=utf-8",
+    ".js": "text/javascript; charset=utf-8",
+    ".json": "application/json; charset=utf-8",
+    ".svg": "image/svg+xml",
+    ".woff": "font/woff",
+    ".woff2": "font/woff2"
+  };
+  fs.stat(filePath, (error, stats) => {
+    if (error || !stats.isFile()) {
+      response.writeHead(404);
+      response.end("Not found");
+      return;
+    }
+
+    response.writeHead(200, {
+      "Content-Type": contentTypes[path.extname(filePath).toLowerCase()] || "application/octet-stream",
+      "Cache-Control": "no-cache",
+      ...SECURITY_HEADERS,
+      "Content-Security-Policy": "default-src 'self'; img-src 'self' data:; style-src 'self'; script-src 'self'; connect-src 'self' https://*.neon.tech https://*.neon.build; base-uri 'none'; form-action 'self'; frame-ancestors 'none'; object-src 'none'"
+    });
+    fs.createReadStream(filePath).pipe(response);
   });
-  fs.createReadStream(path.join(PUBLIC_DIR, name)).pipe(response);
 }
 
 async function handleRequest(request, response) {

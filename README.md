@@ -1,6 +1,6 @@
 # QuickPaste
 
-A small, account-free paste-sharing app. Create a text paste, copy its link, and optionally expire it after a set time or number of views. Paste text is rendered as text (not HTML), and the server accepts content up to 1 MB.
+A small paste-sharing app. Guests can create shareable text pastes with optional time and view limits. Users can optionally create an account to view their email and manage their display name. Paste text is rendered as text (not HTML), and the server accepts content up to 1 MB.
 
 ## Run locally
 
@@ -11,7 +11,7 @@ npm install
 npm start
 ```
 
-Open [http://localhost:3000](http://localhost:3000). Paste records are stored in `data/pastes.json`; set `DATA_DIR` to use another directory. The store is created on first launch.
+Open [http://localhost:3000](http://localhost:3000). Paste records are stored in `data/pastes.json`; set `DATA_DIR` to use another directory. To use Neon Auth locally, set `VITE_NEON_AUTH_URL` in the environment before running `npm start`.
 
 ## Security and privacy
 
@@ -21,12 +21,14 @@ Links are public to anyone who has them, and content is stored unencrypted in th
 
 ## Deploy
 
-QuickPaste can run on Vercel with Neon Postgres:
+QuickPaste uses Vercel Functions and Neon Postgres:
 
-1. Import this repository into Vercel and create a Neon Postgres database.
-2. Add the database connection string as the `POSTGRES_URL` environment variable in the Vercel project. Do not commit the connection string.
-3. Deploy the project. The app creates its `pastes` table automatically on the first API request; the database role must be allowed to create tables.
+1. Import this repository into Vercel and connect a Neon Postgres database. Set `POSTGRES_URL` or `DATABASE_URL` in the Vercel project. Do not commit database credentials.
+2. In Neon Console, enable Managed Better Auth for the database branch. Enable email/password sign-up and require email verification; verification codes work with Neon’s shared email provider.
+3. Add `https://quickpaste-sigma.vercel.app` to Neon Auth's trusted domains.
+4. Add `VITE_NEON_AUTH_URL` in Vercel using the Auth Base URL from Neon, for Production and Preview. This is the public auth endpoint, not a database password.
+5. Redeploy. The app creates its paste table on the first API request.
 
-The Vercel API uses Postgres so paste data and view limits are shared and durable across function instances. If `POSTGRES_URL` is missing on Vercel, API requests return a configuration error rather than writing to ephemeral storage. For local development, the app continues to use `data/pastes.json` unless `POSTGRES_URL` or `DATABASE_URL` is set.
+`vercel.json` builds and serves the bundled frontend from `dist` while retaining the Node API function. The Neon Auth client stores account data in the `neon_auth` schema; paste data and view limits are stored in `pastes`. Locally, paste data uses `data/pastes.json` unless `POSTGRES_URL` or `DATABASE_URL` is set. The dark-mode preference is saved in the browser.
 
-The app has no user accounts or paste-management screen. Anyone with a paste link can read it; the view limit counts successful opens of that link.
+Accounts are optional: guests can continue creating pastes. Anyone with a paste link can read it; the view limit counts successful opens of that link. Do not use QuickPaste for passwords or other sensitive secrets.

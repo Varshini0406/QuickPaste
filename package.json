@@ -4,12 +4,17 @@
   "private": true,
   "description": "A small paste-sharing app with expiring links",
   "scripts": {
-    "start": "node server.js"
+    "build": "node build.js",
+    "start": "npm run build && node server.js"
   },
   "dependencies": {
+    "@neon/neon-js": "^0.10.2",
     "@neondatabase/serverless": "^1.0.2"
   },
   "engines": {
     "node": ">=20"
+  },
+  "devDependencies": {
+    "esbuild": "^0.28.2"
   }
 }

@@ -6,15 +6,25 @@
     <meta name="theme-color" content="#f4f7f3">
     <meta name="description" content="A simple, private-feeling place to share text with an expiring link.">
     <title>QuickPaste — share text simply</title>
-    <link rel="stylesheet" href="/styles.css?v=6">
-    <script src="/app.js" defer></script>
+    <link rel="stylesheet" href="/styles.css?v=7">
+    <script type="module" src="/app.js"></script>
   </head>
   <body>
     <header class="topbar">
       <a class="brand" href="/" aria-label="QuickPaste home">
         <span class="brand-name">Quick<span>Paste</span></span>
       </a>
-      <span class="top-note"><span class="status-dot"></span> Your words, on their way</span>
+      <div class="top-actions">
+        <span class="top-note"><span class="status-dot"></span> Your words, on their way</span>
+        <button id="theme-toggle" class="icon-button" type="button" aria-label="Switch to dark mode" title="Switch to dark mode" aria-pressed="false">
+          <svg class="theme-sun" viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="4"></circle><path d="M12 2v2m0 16v2M4.93 4.93l1.42 1.42m11.3 11.3 1.42 1.42M2 12h2m16 0h2M4.93 19.07l1.42-1.42m11.3-11.3 1.42-1.42"></path></svg>
+          <svg class="theme-moon" viewBox="0 0 24 24" aria-hidden="true"><path d="M20.2 15.4A8.4 8.4 0 0 1 8.6 3.8 8.5 8.5 0 1 0 20.2 15.4Z"></path></svg>
+        </button>
+        <button id="account-button" class="account-button" type="button">
+          <svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="8" r="3.5"></circle><path d="M5 20a7 7 0 0 1 14 0"></path></svg>
+          <span id="account-button-label">Sign in</span>
+        </button>
+      </div>
     </header>
 
     <main>
@@ -116,6 +126,61 @@
         <a class="primary-button button-link" href="/">Create a new paste <span class="button-arrow" aria-hidden="true">↗</span></a>
       </section>
     </main>
+
+    <div id="account-modal" class="modal-backdrop" hidden>
+      <section class="account-dialog card" role="dialog" aria-modal="true" aria-labelledby="account-title">
+        <header class="account-dialog-header">
+          <div>
+            <span class="section-kicker">QUICKPASTE ACCOUNT</span>
+            <h2 id="account-title">Welcome back</h2>
+          </div>
+          <button id="close-account" class="icon-button close-button" type="button" aria-label="Close account dialog" title="Close">×</button>
+        </header>
+
+        <div id="auth-config-warning" class="form-error" role="alert" hidden>
+          Account sign-in isn’t configured yet. Enable Managed Better Auth in Neon and set VITE_NEON_AUTH_URL in Vercel.
+        </div>
+
+        <div id="auth-panel">
+          <div class="auth-tabs" role="tablist" aria-label="Account action">
+            <button id="sign-in-tab" class="auth-tab active" type="button" role="tab" aria-selected="true">Sign in</button>
+            <button id="sign-up-tab" class="auth-tab" type="button" role="tab" aria-selected="false">Create account</button>
+          </div>
+          <form id="auth-form">
+            <label id="name-field" class="field-label" for="account-name" hidden>YOUR NAME</label>
+            <input id="account-name" name="name" type="text" maxlength="80" autocomplete="name" placeholder="Your name" hidden>
+            <label class="field-label" for="account-email">EMAIL ADDRESS</label>
+            <input id="account-email" name="email" type="email" autocomplete="email" required placeholder="you@example.com">
+            <label class="field-label account-password-label" for="account-password">PASSWORD</label>
+            <input id="account-password" name="password" type="password" minlength="8" autocomplete="current-password" required placeholder="At least 8 characters">
+            <p id="auth-message" class="account-message" role="status" aria-live="polite"></p>
+            <button id="auth-submit" class="primary-button" type="submit">Sign in</button>
+          </form>
+        </div>
+
+        <form id="verification-form" hidden>
+          <p class="account-hint">Enter the verification code sent to your email address.</p>
+          <label class="field-label" for="verification-code">VERIFICATION CODE</label>
+          <input id="verification-code" type="text" inputmode="numeric" autocomplete="one-time-code" maxlength="8" required placeholder="Enter your code">
+          <p id="verification-message" class="account-message" role="status" aria-live="polite"></p>
+          <button class="primary-button" type="submit">Verify email</button>
+          <button id="resend-verification" class="text-button" type="button">Resend code</button>
+        </form>
+
+        <div id="profile-panel" hidden>
+          <p class="account-hint">Your email is linked to your sign-in. You can update your display name below.</p>
+          <label class="field-label" for="profile-email">EMAIL ADDRESS</label>
+          <input id="profile-email" type="email" readonly>
+          <form id="profile-form">
+            <label class="field-label" for="profile-name">DISPLAY NAME</label>
+            <input id="profile-name" type="text" maxlength="80" autocomplete="name" required>
+            <p id="profile-message" class="account-message" role="status" aria-live="polite"></p>
+            <button class="primary-button" type="submit">Save name</button>
+          </form>
+          <button id="sign-out" class="text-button sign-out-button" type="button">Sign out</button>
+        </div>
+      </section>
+    </div>
 
     <footer class="site-footer">
       <span>Made for the things you want to pass along.</span>
