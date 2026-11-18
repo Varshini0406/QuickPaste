@@ -4,7 +4,6 @@ const authUrl = import.meta.env.VITE_NEON_AUTH_URL;
 const authClient = authUrl ? createAuthClient(authUrl) : null;
 const form = document.querySelector("#paste-form");
 const contentInput = document.querySelector("#paste-content");
-const charCount = document.querySelector("#char-count");
 const formError = document.querySelector("#form-error");
 const submitButton = document.querySelector("#submit-button");
 const createView = document.querySelector("#create-view");
@@ -30,14 +29,6 @@ let accountMode = "sign-in";
 let currentUser = null;
 let pendingVerificationEmail = "";
 let authLoadError = "";
-
-function setCharacterCount() {
-  const bytes = new TextEncoder().encode(contentInput.value).length;
-  charCount.textContent = `${bytes.toLocaleString()} / 1 MB`;
-  charCount.classList.toggle("over-limit", bytes > 1024 * 1024);
-}
-
-contentInput.addEventListener("input", setCharacterCount);
 
 form.addEventListener("submit", async (event) => {
   event.preventDefault();

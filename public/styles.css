@@ -145,7 +145,6 @@ input::placeholder, textarea::placeholder { color: #60736c; opacity: 1; }
 input:focus, textarea:focus, select:focus { border-color: #69a89a; box-shadow: 0 0 0 3px rgba(36, 117, 107, .12); }
 
 .content-label-row { display: flex; align-items: center; justify-content: space-between; margin-top: 20px; }
-.char-count { margin-bottom: 8px; color: #50655d; font-family: var(--font-code); font-size: var(--text-xs); font-weight: 600; }
 textarea {
   display: block;
   min-height: 190px;
@@ -441,7 +440,7 @@ input[readonly] { height: 46px; padding: 0 11px; background: #fafbf9; color: var
 [data-theme="dark"] body { background: radial-gradient(ellipse at 13% 25%, rgba(34, 69, 54, .38), transparent 34%), var(--canvas); }
 [data-theme="dark"] .topbar, [data-theme="dark"] .site-footer { border-color: rgba(225, 238, 230, .11); }
 [data-theme="dark"] .top-note, [data-theme="dark"] .section-kicker, [data-theme="dark"] .field-label,
-[data-theme="dark"] .char-count, [data-theme="dark"] .feature, [data-theme="dark"] .paste-meta,
+[data-theme="dark"] .feature, [data-theme="dark"] .paste-meta,
 [data-theme="dark"] .paste-footer, [data-theme="dark"] .account-hint { color: #b6c7bf; }
 [data-theme="dark"] .feature-icon { border-color: #40574b; background: rgba(255,255,255,.04); }
 [data-theme="dark"] .card { border-color: rgba(225, 238, 230, .1); box-shadow: 0 18px 55px rgba(0, 0, 0, .2); }
