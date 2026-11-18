@@ -1,6 +1,6 @@
 # QuickPaste
 
-A small paste-sharing app. Guests can create shareable text pastes with optional time and view limits. Users can optionally create an account to view their email and manage their display name. Paste text is rendered as text (not HTML), and the server accepts content up to 1 MB.
+A small paste-sharing app. Signed-in users can create shareable text pastes with optional time and view limits. Users can manage their display name and view their account email. Paste text is rendered as text (not HTML), and the server accepts content up to 1 MB.
 
 ## Run locally
 
@@ -31,4 +31,4 @@ QuickPaste uses Vercel Functions and Neon Postgres:
 
 `vercel.json` builds and serves the bundled frontend from `dist` while retaining the Node API function. The Neon Auth client stores account data in the `neon_auth` schema; paste data and view limits are stored in `pastes`. Locally, paste data uses `data/pastes.json` unless `POSTGRES_URL` or `DATABASE_URL` is set. The dark-mode preference is saved in the browser.
 
-Accounts are optional: guests can continue creating pastes. Anyone with a paste link can read it; the view limit counts successful opens of that link. Do not use QuickPaste for passwords or other sensitive secrets.
+Users must sign in before creating a paste through the app. Anyone with a paste link can read it; the view limit counts successful opens of that link. Do not use QuickPaste for passwords or other sensitive secrets.

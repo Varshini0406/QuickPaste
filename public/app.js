@@ -42,6 +42,14 @@ contentInput.addEventListener("input", setCharacterCount);
 form.addEventListener("submit", async (event) => {
   event.preventDefault();
   formError.hidden = true;
+  if (!currentUser) {
+    openAccount();
+    if (authClient) {
+      showAccountMessage(authMessage, "Sign in or create an account before creating a paste.");
+    }
+    return;
+  }
+
   const data = new FormData(form);
   const content = data.get("content");
   if (!content.trim()) {
@@ -205,6 +213,8 @@ function showAccountMessage(element, message, type = "") {
 function setCurrentUser(user) {
   currentUser = user;
   setAccountButton();
+  document.querySelector("#submit-button span:first-child").textContent =
+    currentUser ? "Create your link" : "Sign in to create a link";
 }
 
 accountButton.addEventListener("click", openAccount);
